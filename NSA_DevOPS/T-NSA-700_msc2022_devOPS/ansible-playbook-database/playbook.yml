@@ -1,0 +1,4 @@
+- name: Mysql Playbook
+  hosts: all
+
+- import_playbook: main.yml

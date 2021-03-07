@@ -1,0 +1,29 @@
+# Docker
+
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: SSH@0
+      inputs:
+        sshEndpoint: 'Epitech-Machine'
+        runOptions: 'commands'
+        commands: 'cd Time_Manager && git pull && docker container stop $(docker container ls -aq) && docker container rm $(docker container ls -aq) && docker-compose build && docker-compose up -d'
+        readyTimeout: '20000'

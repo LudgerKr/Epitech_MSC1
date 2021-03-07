@@ -1,0 +1,25 @@
+- name: ROLE BUILD APP
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: INSTALL dependencies
+      args:
+        chdir: "/root/backend/"
+      command: composer install
+
+    - name: ARTISAN gen key
+      args:
+        chdir: "/root/backend/"
+      command: php artisan key:generate
+
+    - name: ARTISAN migrate
+      args:
+        chdir: "/root/backend/"
+      command: php artisan migrate
+
+    - name: ARTISAN seed database
+      args:
+        chdir: "/root/backend/"
+      command: php artisan db:seed

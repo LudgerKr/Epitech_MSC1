@@ -1,0 +1,61 @@
+stages:
+  - build
+  - test
+  - deploy
+
+build project:
+  stage: build
+  image: trion/ng-cli
+  allow_failure: false
+  before_script:
+    - npm install
+    - npm install -g n
+    - npm install -g @angular/cli@7.3.9
+  script:
+    - ng build --prod
+  artifacts:
+    expire_in: 1 hours
+    paths:
+      - dist/
+  only:
+    - master
+
+testing karma:
+  stage: test
+  image: trion/ng-cli-karma
+  allow_failure: false
+  before_script:
+    - npm install
+    - export CHROME_BIN=/usr/bin/google-chrome
+  script:
+    - npm test
+  coverage: '/Lines \W+: (\d+\.\d+)%.*/'
+
+testing e2e:
+  stage: test
+  image: trion/ng-cli-e2e:11.1.0
+  allow_failure: false
+  before_script:
+    - npm ci
+    - export CHROME_BIN=/usr/bin/chromium-browser
+  script:
+    - npm run pree2e
+    - npm run e2e
+  coverage: '/Lines \W+: (\d+\.\d+)%.*/'
+
+run ansible-playbook:
+  stage: deploy
+  image: python:latest
+  allow_failure: false
+  before_script:
+    - pip install ansible
+    - apt-get update
+    - apt-get install sshpass
+    - mkdir ~/.ssh -p
+    - ssh-keygen -f ~/.ssh/id_rsa -q -N ""
+    - ssh-keyscan -H 192.168.119.129 >> ~/.ssh/known_hosts
+    - sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.119.129
+    - cd ansible-playbook-front
+  script:
+    - ansible-playbook -i hosts playbook.yml --vault-password-file .vault_password.txt
+  coverage: '/Lines \W+: (\d+\.\d+)%.*/'

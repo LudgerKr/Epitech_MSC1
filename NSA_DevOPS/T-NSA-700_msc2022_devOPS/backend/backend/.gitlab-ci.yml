@@ -1,0 +1,63 @@
+stages:
+  - build
+  - test
+  - deploy
+
+composer:
+  stage: build
+  image: bitnami/laravel:latest
+  script:
+    - composer install
+    - cp .env.example .env
+    - php artisan key:generate
+  artifacts:
+    paths:
+      - vendor/
+      - .env
+    expire_in: 1 days
+    when: always
+  cache:
+    paths:
+      - vendor/
+  only:
+    - master
+
+npm:
+  stage: build
+  image: bitnami/laravel:latest
+  script:
+    - npm install
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    expire_in: 1 hours
+    paths:
+      - public/
+  only:
+    - master
+
+unit test:
+  stage: test
+  image: bitnami/laravel:latest
+  script:
+    - vendor/bin/phpunit tests
+  only:
+    - master
+
+run ansible-playbook:
+  stage: deploy
+  image: python:latest
+  allow_failure: false
+  before_script:
+    - pip install ansible
+    - apt-get update
+    - apt-get install sshpass
+    - mkdir ~/.ssh -p
+    - ssh-keygen -f ~/.ssh/id_rsa -q -N ""
+    - ssh-keyscan -H 192.168.119.130 >> ~/.ssh/known_hosts
+    - sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.119.130
+    - cd ansible-playbook-back
+  script:
+    - ansible-playbook -i hosts playbook.yml --vault-password-file .vault_password.txt
+  coverage: '/Lines \W+: (\d+\.\d+)%.*/'

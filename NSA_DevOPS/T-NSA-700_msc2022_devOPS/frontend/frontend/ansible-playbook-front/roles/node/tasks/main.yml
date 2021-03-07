@@ -1,0 +1,9 @@
+- name: ROLE NODE
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: INSTALL nodejs
+      apt:
+        name: ['nodejs', 'npm']

@@ -1,0 +1,31 @@
+- name: ROLE MYSQL
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: UPDATE system
+      apt: update_cache=yes cache_valid_time=3600
+      become: yes
+
+    - name: Install required software
+      apt: name={{ item }} state=present
+      become: yes
+      with_items:
+       - apache2
+       - mysql-server
+       - php-mysql
+       - php
+
+    - name: UPDATE system
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: COPY sql script
+      template:
+        src: script.sql
+        dest: /
+
+    - name: EXECUTE sql script
+      shell: mysql -u root < /script.sql

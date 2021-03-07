@@ -1,0 +1,14 @@
+- name: Backend Playbook
+  hosts: all
+
+- import_playbook: roles/base/tasks/main.yml
+
+- import_playbook: roles/php/tasks/main.yml
+
+- import_playbook: roles/composer/tasks/main.yml
+
+- import_playbook: roles/environement/tasks/main.yml
+
+- import_playbook: roles/build/tasks/main.yml
+
+- import_playbook: roles/apache2/tasks/main.yml

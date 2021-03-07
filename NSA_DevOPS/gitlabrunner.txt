@@ -1,0 +1,1 @@
+sudo gitlab-runner register -n --url http://192.168.119.128/ --registration-token qM4dG-rXbz6z2geThsHu --executor docker --description "T-NSA-700 Runner" --docker-image "docker:stable" --tag-list t-nsa-runner --docker-privileged

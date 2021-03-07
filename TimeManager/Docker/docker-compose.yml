@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  api:
+    build: ./api_elixir 
+    environment:
+      - MIX_ENV=dev
+      - PORT=4001
+      - DATABASE_URL=ecto://postgres:postgres@POSTGRES_DB/timeManager_dev
+    volumes:
+      - .:/app
+    restart: always
+    ports:
+      - "4001:4001"
+    links:
+      - POSTGRES_DB
+    container_name: "docker_elixir"
+    networks:
+      - api-tier
+      - client-tier
+      - db-tier
+
+  POSTGRES_DB:
+    image: postgres:9.6.5
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=timeManager_dev
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    restart: always
+    container_name: "docker_db"
+    networks:
+      - db-tier
+      - api-tier
+
+  client:
+    container_name: docker_vuejs
+    build: ./client_vuejs
+    restart: always
+    ports:
+      - '8080:8080'
+    networks:
+      - api-tier
+      - client-tier
+
+networks:
+  api-tier:
+  client-tier:
+  db-tier:

@@ -1,0 +1,12 @@
+- name: Frontend Playbook
+  hosts: all
+
+- import_playbook: roles/base/tasks/main.yml
+
+- import_playbook: roles/node/tasks/main.yml
+
+- import_playbook: roles/angular/tasks/main.yml
+
+- import_playbook: roles/build_app/tasks/main.yml
+
+- import_playbook: roles/apache/tasks/main.yml
