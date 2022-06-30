@@ -1,0 +1,36 @@
+- name: APACHE 2 CONFIGURATION
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: COPY file to /var/www/html
+      command: cp /root/frontend /var/www/html/frontend -r
+
+    - name: SET group
+      command: sudo chgrp -R www-data /var/www/html/frontend
+
+    - name: SET permissions
+      command: sudo chmod -R 775 /var/www/html/frontend
+
+    - name: CREATE apache virtualhost
+      args:
+        chdir: "/etc/apache2/sites-available"
+      command: touch angular.conf
+
+    - name: UPLOAD vhost
+      template:
+        src: vhost.conf
+        dest: "/etc/apache2/sites-available/angular.conf"
+
+    - name: APACHE dissite default
+      command: sudo a2dissite 000-default.conf
+
+    - name: APACHE ensite project conf
+      command: sudo a2ensite angular.conf
+
+    - name: APACHE allow rewrite module
+      command: sudo a2enmod rewrite
+
+    - name: SYSTEMCTL restart apache
+      command: sudo systemctl restart apache2

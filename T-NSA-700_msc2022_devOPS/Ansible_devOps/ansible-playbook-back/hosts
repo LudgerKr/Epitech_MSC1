@@ -1,0 +1,7 @@
+
+[back]
+root@192.168.56.131
+
+[all:vars]
+ansible_connection=ssh
+ansible_python_interpreter=/usr/bin/python

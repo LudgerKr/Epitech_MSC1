@@ -1,0 +1,14 @@
+server01_database:
+  hosts:
+    root@192.168.56.132
+
+server02_backend:
+  hosts:
+    root@192.168.56.131
+
+server03_frontend:
+  hosts:
+    root@192.168.119.129
+server04_gitlab:
+  hosts:
+    root@192.168.119.128

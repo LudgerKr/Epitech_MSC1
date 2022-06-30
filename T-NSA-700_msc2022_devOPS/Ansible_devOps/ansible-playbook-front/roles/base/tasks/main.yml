@@ -1,0 +1,21 @@
+- name: ROLE BASE
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: UPDATE system
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: INSTALL base packages
+      apt:
+        name: ['sudo', 'unzip', 'curl', 'git', 'ufw']
+
+    - name: CLONE front end repository from gitlab
+      git:
+        repo: git@192.168.56.133:root/frontend.git
+        version: master
+        dest: /root/frontend
+        accept_hostkey: yes

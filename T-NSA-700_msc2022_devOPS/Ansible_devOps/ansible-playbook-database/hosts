@@ -1,0 +1,7 @@
+
+[database]
+root@192.168.56.132
+
+[all:vars]
+ansible_connection=ssh
+ansible_python_interpreter=/usr/bin/python

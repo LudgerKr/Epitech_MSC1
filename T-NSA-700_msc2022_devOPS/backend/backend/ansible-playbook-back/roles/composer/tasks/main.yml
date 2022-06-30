@@ -1,0 +1,12 @@
+- name: ROLE COMPOSER INSTALLATION
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: INSTALL composer
+      apt:
+        name: ['composer']
+
+    - name: EXPORT composer globally
+      command: echo "export PATH=$PATH:~/.config/composer/vendor/bin" >> ~/.bashrc

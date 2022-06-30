@@ -1,0 +1,9 @@
+- name: ROLE PHP INSTALLATION
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: INSTALL php packages
+      apt:
+        name: ['php', 'php-bcmath', 'php-json', 'php-mbstring', 'php-mysql', 'php-tokenizer', 'php-xml', 'php-zip']

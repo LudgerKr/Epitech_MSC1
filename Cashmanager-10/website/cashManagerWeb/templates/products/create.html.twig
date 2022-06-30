@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create/Modify{% endblock %}
+
+{% form_theme formProducts 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+
+    {% if editMode %}
+        <h1>Modifier un produit</h1>
+    {% else %}
+        <h1>Ajouter un produit</h1>
+    {% endif %}
+
+    {{ form_start(formProducts) }}
+
+    {{ form_row(formProducts.name, {'attr': {'placeholder': "Nom du produit"}}) }}
+    {{ form_row(formProducts.ean_code, {'attr': {'placeholder': "Nom du produit"}}) }}
+    {{ form_row(formProducts.description, {'attr': {'placeholder': "Description du produit"}}) }}
+    {{ form_row(formProducts.price, {'attr': {'placeholder': "Prix du produit"}}) }}
+    {{ form_row(formProducts.stock, {'attr': {'placeholder': "Stock du produit"}}) }}
+
+    <button type="submit" class="btn btn-success">
+        {% if editMode %}
+            Enregistrer les modifications
+        {% else %}
+            Ajouter un produit</button>
+        {% endif %}
+    {{ form_end(formProducts) }}
+
+
+{% endblock %}

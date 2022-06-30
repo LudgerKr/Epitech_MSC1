@@ -1,0 +1,21 @@
+stages:
+  - build
+  - test
+  - deploy
+
+run ansible-playbook:
+  stage: deploy
+  image: python:latest
+  allow_failure: false
+  before_script:
+    - pip install ansible
+    - apt-get update
+    - apt-get install sshpass
+    - mkdir ~/.ssh -p
+    - ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
+    - ssh-keyscan -H 192.168.119.130 >> ~/.ssh/known_hosts
+    - sshpass -p root ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.119.130
+    - cd ansible-playbook-back
+  script:
+    - ansible-playbook -i hosts playbook.yml --vault-password-file .vault_password.txt
+  coverage: '/Lines \W+: (\d+\.\d+)%.*/'

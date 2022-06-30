@@ -1,0 +1,42 @@
+- name: ROLE BUILD APP
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: CREATE .env
+      copy:
+        remote_src: yes
+        src: "/root/backend/.env.example"
+        dest: "/root/backend/.env"
+        mode: '600'
+
+    - name: EDIT .env DB_HOST
+      lineinfile:
+        path: "/root/backend/.env"
+        regexp: '^DB_HOST=.*$'
+        line: "DB_HOST={{ DB_HOST }}"
+
+    - name: EDIT .env DB_PORT
+      lineinfile:
+        path: "/root/backend/.env"
+        regexp: '^DB_PORT=.*$'
+        line: "DB_PORT={{ DB_PORT }}"
+
+    - name: EDIT .env DB_DATABASE
+      lineinfile:
+        path: "/root/backend/.env"
+        regexp: '^DB_DATABASE=.*$'
+        line: "DB_DATABASE={{ DB_DATABASE }}"
+
+    - name: EDIT .env DB_USERNAME
+      lineinfile:
+        path: "/root/backend/.env"
+        regexp: '^DB_USERNAME=.*$'
+        line: "DB_USERNAME={{ DB_USERNAME }}"
+
+    - name: EDIT .env DB_PASSWORD
+      lineinfile:
+        path: "/root/backend/.env"
+        regexp: '^DB_PASSWORD=.*$'
+        line: "DB_PASSWORD={{ DB_PASSWORD }}"

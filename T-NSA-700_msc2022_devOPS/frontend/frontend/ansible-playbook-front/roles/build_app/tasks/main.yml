@@ -1,0 +1,15 @@
+- name: ROLE BUILD APP
+  hosts: all
+  become: yes
+  remote_user: root
+
+  tasks:
+    - name: INSTALL dependencies
+      args:
+        chdir: "/root/frontend/"
+      command: npm install
+
+    - name: BUILD project for prod
+      args:
+        chdir: "/root/frontend/"
+      command: ng build --prod
